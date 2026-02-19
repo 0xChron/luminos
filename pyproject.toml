@@ -1,7 +1,7 @@
 [project]
-name = "solar"
+name = "luminos"
 version = "0.1.0"
-description = "Add your description here"
+description = "from raw irradiance to insight. a solar data platform built for engineering, visualization, and analysis."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
