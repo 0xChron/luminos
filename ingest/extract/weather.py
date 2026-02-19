@@ -1,0 +1,66 @@
+import pandas as pd
+from ingest.client.openmeteo_api import OpenMeteoClient
+
+class WeatherExtractor:
+    def __init__(self, start_date: str, end_date: str):
+        self.client = OpenMeteoClient()
+        self.start_date = start_date
+        self.end_date = end_date
+    
+    def extract(self) -> pd.DataFrame:
+        response = self.client.get_weather_data(start_date=self.start_date, end_date=self.end_date)
+        
+        hourly_df = self._transform_hourly(response)
+        daily_df = self._transform_daily(response)
+
+        return hourly_df, daily_df
+    
+    def _transform_hourly(self, response: dict) -> pd.DataFrame:
+        hourly = response.Hourly()
+        hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
+        hourly_cloud_cover = hourly.Variables(1).ValuesAsNumpy()
+        hourly_precipitation = hourly.Variables(2).ValuesAsNumpy()
+        hourly_wind_speed_10m = hourly.Variables(3).ValuesAsNumpy()
+        hourly_relative_humidity_2m = hourly.Variables(4).ValuesAsNumpy()
+        hourly_weather_code = hourly.Variables(5).ValuesAsNumpy()
+
+        hourly_data = {"date": pd.date_range(
+            start = pd.to_datetime(hourly.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
+            end =  pd.to_datetime(hourly.TimeEnd() + response.UtcOffsetSeconds(), unit = "s", utc = True),
+            freq = pd.Timedelta(seconds = hourly.Interval()),
+            inclusive = "left"
+        )}
+
+        hourly_data["temperature_2m"] = hourly_temperature_2m
+        hourly_data["cloud_cover"] = hourly_cloud_cover
+        hourly_data["precipitation"] = hourly_precipitation
+        hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+        hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+        hourly_data["weather_code"] = hourly_weather_code
+
+        return pd.DataFrame(data=hourly_data)
+    
+    def _transform_daily(self, response: dict) -> pd.DataFrame:
+        daily = response.Daily()
+        daily_shortwave_radiation_sum = daily.Variables(0).ValuesAsNumpy()
+        daily_sunshine_duration = daily.Variables(1).ValuesAsNumpy()
+        daily_daylight_duration = daily.Variables(2).ValuesAsNumpy()
+        daily_uv_index_clear_sky_max = daily.Variables(3).ValuesAsNumpy()
+        daily_temperature_2m_max = daily.Variables(4).ValuesAsNumpy()
+        daily_temperature_2m_min = daily.Variables(5).ValuesAsNumpy()
+
+        daily_data = {"date": pd.date_range(
+            start = pd.to_datetime(daily.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
+            end =  pd.to_datetime(daily.TimeEnd() + response.UtcOffsetSeconds(), unit = "s", utc = True),
+            freq = pd.Timedelta(seconds = daily.Interval()),
+            inclusive = "left"
+        )}
+
+        daily_data["shortwave_radiation_sum"] = daily_shortwave_radiation_sum
+        daily_data["sunshine_duration"] = daily_sunshine_duration
+        daily_data["daylight_duration"] = daily_daylight_duration
+        daily_data["uv_index_clear_sky_max"] = daily_uv_index_clear_sky_max
+        daily_data["temperature_2m_max"] = daily_temperature_2m_max
+        daily_data["temperature_2m_min"] = daily_temperature_2m_min
+
+        return pd.DataFrame(data=daily_data)

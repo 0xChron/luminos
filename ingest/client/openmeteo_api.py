@@ -7,7 +7,7 @@ class OpenMeteoClient:
     def __init__(self, 
             latitude: float = Config.LATITUDE, 
             longitude: float = Config.LONGITUDE, 
-            timezone: str = Config.TIMEZONE
+            timezone: str = Config.TIMEZONE,
         ):
         self.latitude = latitude
         self.longitude = longitude
@@ -27,16 +27,20 @@ class OpenMeteoClient:
             "temperature_2m_max", 
             "temperature_2m_min"
         ]
+
         self.client = self._initialize_client()
+        
 
 
-    def get_weather_data(self) -> dict:
+    def get_weather_data(self, start_date: str, end_date: str) -> dict:
         data = {
             'latitude': self.latitude,
             'longitude': self.longitude,
             'hourly': self.hourly_parameters,
             'daily': self.daily_parameters,
-            'timezone': self.timezone
+            'timezone': self.timezone,
+        	"start_date": start_date,
+	        "end_date": end_date,
         }
 
         try:
