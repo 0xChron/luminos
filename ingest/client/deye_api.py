@@ -5,8 +5,8 @@ from ingest.config import Config
 
 class DeyeCloudClient:
     def __init__(self):
-        self.token_url = Config.BASE_URL + '/account/token?appId=' + Config.APP_ID
-        self.solar_data_url = Config.BASE_URL + '/station/history/power'
+        self.token_url = Config.DEYE_BASE_URL + '/account/token?appId=' + Config.APP_ID
+        self.solar_data_url = Config.DEYE_BASE_URL + '/station/history/power'
         self.app_id = Config.APP_ID
         self.app_secret = Config.APP_SECRET
         self.email = Config.EMAIL

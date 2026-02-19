@@ -11,12 +11,13 @@ class Config:
     APP_SECRET = os.getenv('APP_SECRET')
     DEVICE_SN = os.getenv('DEVICE_SN')
     STATION_ID = os.getenv('STATION_ID')
-    BASE_URL = 'https://eu1-developer.deyecloud.com/v1.0'
+    DEYE_BASE_URL = 'https://eu1-developer.deyecloud.com/v1.0'
 
     # openmeteo weather api config
     LATITUDE = os.getenv('LATITUDE')
     LONGITUDE = os.getenv('LONGITUDE')
     TIMEZONE = os.getenv('TIMEZONE', 'Asia/Singapore')
+    WEATHER_BASE_URL = 'https://api.open-meteo.com/v1/forecast'
 
     DUCKDB_PATH = 'weather_warehouse.duckdb'
 
