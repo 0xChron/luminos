@@ -1,24 +1,26 @@
 import pandas as pd
+from datetime import timedelta
 from ingest.client.deye_api import DeyeCloudClient
+from ingest.config import Config
 
 class SolarExtractor:
     def __init__(self):
         self.client = DeyeCloudClient()
 
-    def extract(self, target_timestamp: int) -> pd.DataFrame:
-        date_target = target_timestamp # fix
-        date_before = target_timestamp - 86400 # fix 
+    def extract(self, start_timestamp: int, end_timestamp: int) -> pd.DataFrame:
         raw_data = self.client.get_solar_data(
-            start_timestamp=date_before, 
-            end_timestamp=date_target)
+            start_timestamp=start_timestamp,
+            end_timestamp=end_timestamp,
+        )
         
         return self._transform(raw_data)
     
     def _transform(self, raw_data: dict) -> pd.DataFrame:
         records = raw_data['stationDataItems']
+        # print(records)
         df = pd.DataFrame(records)
         df = df.rename(columns={
-            'timeStamp': 'time_stamp',
+            'timeStamp': 'timestamp',
             'generationPower': 'generation',
             'consumptionPower': 'consumption',
             'gridPower': 'grid_feed_in',
@@ -28,6 +30,8 @@ class SolarExtractor:
             'batterySOC': 'battery_soc'
         })
 
-        df = df[['time_stamp', 'generation', 'consumption', 'grid_feed_in', 
+        df = df[['timestamp', 'generation', 'consumption', 'grid_feed_in', 
             'grid_purchase', 'charge_power', 'discharge_power', 'battery_soc']]
         return df
+    
+

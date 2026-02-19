@@ -20,13 +20,13 @@ class DuckDBLoader:
         # solar energy fact table
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS fact_solar_energy_data (
-                timestamp TIMESTAMP PRIMARY KEY,
+                timestamp DOUBLE PRIMARY KEY,
                 generation DOUBLE,
                 consumption DOUBLE,
                 grid_feed_in DOUBLE,
-                grid_purchased DOUBLE,
-                charge_value DOUBLE,
-                discharge_value DOUBLE,
+                grid_purchase DOUBLE,
+                charge_power DOUBLE,
+                discharge_power DOUBLE,
                 loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
@@ -64,12 +64,12 @@ class DuckDBLoader:
             return 0
         
         # delete existing records for the date range
-        min_date = df['timestamp'].min().date()
-        max_date = df['timestamp'].max().date()
+        min_date = df['timestamp'].min()
+        max_date = df['timestamp'].max()
         
         self.conn.execute(f"""
             DELETE FROM fact_solar_energy_data 
-            WHERE DATE(timestamp) BETWEEN '{min_date}' AND '{max_date}'
+            WHERE timestamp BETWEEN '{min_date}' AND '{max_date}'
         """)
         
         # insert new records
@@ -80,18 +80,18 @@ class DuckDBLoader:
                 generation,
                 consumption,
                 grid_feed_in, 
-                grid_purchased,
-                charge_value,
-                discharge_value
+                grid_purchase,
+                charge_power,
+                discharge_power
             )
             SELECT 
                 timestamp, 
                 generation,
                 consumption,
                 grid_feed_in,
-                grid_purchased, 
-                charge_value,
-                discharge_value
+                grid_purchase, 
+                charge_power,
+                discharge_power
             FROM df
         """)
         
