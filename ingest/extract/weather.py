@@ -2,13 +2,15 @@ import pandas as pd
 from ingest.client.openmeteo_api import OpenMeteoClient
 
 class WeatherExtractor:
-    def __init__(self, start_date: str, end_date: str):
+    def __init__(self):
         self.client = OpenMeteoClient()
-        self.start_date = start_date
-        self.end_date = end_date
     
-    def extract(self) -> pd.DataFrame:
-        response = self.client.get_weather_data(start_date=self.start_date, end_date=self.end_date)
+    # weather data is inclusive of both start date and end date
+    def extract(self, start_date: str, end_date: str) -> pd.DataFrame:
+        response = self.client.get_weather_data(
+            start_date=start_date, 
+            end_date=end_date
+        )
         
         hourly_df = self._transform_hourly(response)
         daily_df = self._transform_daily(response)

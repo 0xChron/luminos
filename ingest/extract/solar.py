@@ -17,7 +17,7 @@ class SolarExtractor:
     
     def _transform(self, raw_data: dict) -> pd.DataFrame:
         records = raw_data['stationDataItems']
-        # print(records)
+
         df = pd.DataFrame(records)
         df = df.rename(columns={
             'timeStamp': 'timestamp',
