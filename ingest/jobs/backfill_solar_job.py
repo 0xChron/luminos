@@ -4,8 +4,13 @@ from ingest.extract.solar import SolarExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
 from ingest.config import Config
 import logging
+import argparse
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
 logger = logging.getLogger(__name__)
 
 def run_backfill_solar_job(start_date: str, end_date: str) -> None:
@@ -35,9 +40,11 @@ def run_backfill_solar_job(start_date: str, end_date: str) -> None:
     
     
 if __name__ == "__main__":
-    START_DATE = "2026-02-02"
-    END_DATE = "2026-02-19"
+    parser = argparse.ArgumentParser(description="backfill solar energy data")
+    parser.add_argument("--start-date", required=True, help="start date in YYYY-MM-DD format")
+    parser.add_argument("--end-date", required=True, help="end date in YYYY-MM-DD format")
+    args = parser.parse_args()
     
-    run_backfill_solar_job(start_date=START_DATE, end_date=END_DATE)
+    run_backfill_solar_job(start_date=args.start_date, end_date=args.end_date)
 
 

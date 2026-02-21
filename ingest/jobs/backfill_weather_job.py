@@ -1,8 +1,13 @@
 from ingest.extract.weather import WeatherExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
 import logging
+import argparse
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
 logger = logging.getLogger(__name__)
 
 def run_backfill_weather_job(start_date: str, end_date: str) -> None:
@@ -25,6 +30,9 @@ def run_backfill_weather_job(start_date: str, end_date: str) -> None:
         raise
 
 if __name__ == "__main__":
-    START_DATE = "2026-02-02"
-    END_DATE = "2026-02-19"
-    run_backfill_weather_job(start_date=START_DATE, end_date=END_DATE)
+    parser = argparse.ArgumentParser(description="backfill solar energy data")
+    parser.add_argument("--start-date", required=True, help="start date in YYYY-MM-DD format")
+    parser.add_argument("--end-date", required=True, help="end date in YYYY-MM-DD format")
+    args = parser.parse_args()
+
+    run_backfill_weather_job(start_date=args.start_date, end_date=args.end_date)
