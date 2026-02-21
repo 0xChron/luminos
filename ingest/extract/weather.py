@@ -1,5 +1,8 @@
 import pandas as pd
+import logging
 from ingest.client.openmeteo_api import OpenMeteoClient
+
+logger = logging.getLogger(__name__)
 
 class WeatherExtractor:
     def __init__(self):
@@ -7,15 +10,19 @@ class WeatherExtractor:
     
     # weather data is inclusive of both start date and end date
     def extract(self, start_date: str, end_date: str) -> pd.DataFrame:
-        response = self.client.get_weather_data(
-            start_date=start_date, 
-            end_date=end_date
-        )
-        
-        hourly_df = self._transform_hourly(response)
-        daily_df = self._transform_daily(response)
+        try:
+            response = self.client.get_weather_data(
+                start_date=start_date, 
+                end_date=end_date
+            )
+            
+            hourly_df = self._transform_hourly(response)
+            daily_df = self._transform_daily(response)
 
-        return hourly_df, daily_df
+            return hourly_df, daily_df
+        except Exception as err:
+            logger.error(f"failed to extract weather data: {str(err)}")
+            raise
     
     def _transform_hourly(self, response: dict) -> pd.DataFrame:
         hourly = response.Hourly()
@@ -26,7 +33,7 @@ class WeatherExtractor:
         hourly_relative_humidity_2m = hourly.Variables(4).ValuesAsNumpy()
         hourly_weather_code = hourly.Variables(5).ValuesAsNumpy()
 
-        hourly_data = {"date": pd.date_range(
+        hourly_data = {"timestamp": pd.date_range(
             start = pd.to_datetime(hourly.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
             end =  pd.to_datetime(hourly.TimeEnd() + response.UtcOffsetSeconds(), unit = "s", utc = True),
             freq = pd.Timedelta(seconds = hourly.Interval()),
@@ -51,7 +58,7 @@ class WeatherExtractor:
         daily_temperature_2m_max = daily.Variables(4).ValuesAsNumpy()
         daily_temperature_2m_min = daily.Variables(5).ValuesAsNumpy()
 
-        daily_data = {"date": pd.date_range(
+        daily_data = {"timestamp": pd.date_range(
             start = pd.to_datetime(daily.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
             end =  pd.to_datetime(daily.TimeEnd() + response.UtcOffsetSeconds(), unit = "s", utc = True),
             freq = pd.Timedelta(seconds = daily.Interval()),

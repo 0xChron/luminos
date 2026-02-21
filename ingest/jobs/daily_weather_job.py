@@ -1,6 +1,8 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from ingest.extract.weather import WeatherExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
+from ingest.config import Config
 import logging
 
 logging.basicConfig(
@@ -11,7 +13,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def run_weather_job(target_date=None):
-    tz = timezone(timedelta(hours=8))
+    tz = ZoneInfo(Config.TIMEZONE)
     
     if target_date is None:
         # yyyy-mm-dd: always get yesterday's weather data, as today's data may not be complete
@@ -23,6 +25,7 @@ def run_weather_job(target_date=None):
             start_date=target_date,
             end_date=target_date
         )
+
         logger.info(f"extracted {len(hourly_df)} hourly, {len(daily_df)} daily weather records")
         
         with DuckDBLoader() as loader:

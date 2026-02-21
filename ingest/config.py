@@ -18,6 +18,7 @@ class Config:
     LONGITUDE = os.getenv('LONGITUDE')
     TIMEZONE = os.getenv('TIMEZONE', 'Asia/Singapore')
     WEATHER_BASE_URL = 'https://api.open-meteo.com/v1/forecast'
+    TIMEZONE = "Asia/Manila"
 
     DUCKDB_PATH = 'weather_warehouse.duckdb'
 

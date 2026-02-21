@@ -1,14 +1,11 @@
 from ingest.extract.weather import WeatherExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
-from datetime import timezone, timedelta
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 def run_backfill_weather_job(start_date: str, end_date: str) -> None:
-    tz = timezone(timedelta(hours=8))
-
     try:
         extractor = WeatherExtractor()
         hourly_df, daily_df = extractor.extract(

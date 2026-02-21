@@ -27,6 +27,7 @@ class DuckDBLoader:
                 grid_purchase DOUBLE,
                 charge_power DOUBLE,
                 discharge_power DOUBLE,
+                battery_soc DOUBLE,
                 loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
@@ -48,7 +49,7 @@ class DuckDBLoader:
         # weather daily dimension
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS dim_weather_data_daily (
-                date DATE PRIMARY KEY,
+                timestamp TIMESTAMP PRIMARY KEY,
                 shortwave_radiation_sum DOUBLE,
                 sunshine_duration DOUBLE,
                 daylight_duration DOUBLE,
@@ -82,7 +83,8 @@ class DuckDBLoader:
                 grid_feed_in, 
                 grid_purchase,
                 charge_power,
-                discharge_power
+                discharge_power,
+                battery_soc
             )
             SELECT 
                 timestamp, 
@@ -91,7 +93,8 @@ class DuckDBLoader:
                 grid_feed_in,
                 grid_purchase, 
                 charge_power,
-                discharge_power
+                discharge_power,
+                battery_soc
             FROM df
         """)
         
@@ -112,7 +115,15 @@ class DuckDBLoader:
                 relative_humidity_2m, 
                 weather_code
             )
-            SELECT * FROM df
+            SELECT
+                timestamp, 
+                temperature_2m,
+                cloud_cover,
+                precipitation,
+                wind_speed_10m, 
+                relative_humidity_2m, 
+                weather_code
+            FROM df
         """)
         
         return len(df)
@@ -124,7 +135,7 @@ class DuckDBLoader:
         self.conn.execute("""
             INSERT OR REPLACE INTO dim_weather_data_daily 
             (
-                date, 
+                timestamp, 
                 shortwave_radiation_sum, 
                 sunshine_duration,
                 daylight_duration, 
@@ -132,7 +143,15 @@ class DuckDBLoader:
                 temperature_2m_max, 
                 temperature_2m_min
             )
-            SELECT * FROM df
+            SELECT 
+                timestamp, 
+                shortwave_radiation_sum, 
+                sunshine_duration,
+                daylight_duration, 
+                uv_index_clear_sky_max,
+                temperature_2m_max, 
+                temperature_2m_min
+            FROM df
         """)
-        
+            
         return len(df)

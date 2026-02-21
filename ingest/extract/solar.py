@@ -1,19 +1,25 @@
 import pandas as pd
-from datetime import timedelta
+import logging
 from ingest.client.deye_api import DeyeCloudClient
 from ingest.config import Config
+
+logger = logging.getLogger(__name__)
 
 class SolarExtractor:
     def __init__(self):
         self.client = DeyeCloudClient()
 
     def extract(self, start_timestamp: int, end_timestamp: int) -> pd.DataFrame:
-        raw_data = self.client.get_solar_data(
-            start_timestamp=start_timestamp,
-            end_timestamp=end_timestamp,
-        )
-        
-        return self._transform(raw_data)
+        try:
+            raw_data = self.client.get_solar_data(
+                start_timestamp=start_timestamp,
+                end_timestamp=end_timestamp,
+            )
+            
+            return self._transform(raw_data)
+        except Exception as err:
+            logger.error(f"failed to extract solar data: {str(err)}")
+            raise
     
     def _transform(self, raw_data: dict) -> pd.DataFrame:
         records = raw_data['stationDataItems']

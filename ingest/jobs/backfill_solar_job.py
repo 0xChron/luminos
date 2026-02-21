@@ -2,13 +2,14 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from ingest.extract.solar import SolarExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
+from ingest.config import Config
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def run_backfill_solar_job(start_date: str, end_date: str) -> None:
-    tz = ZoneInfo("Asia/Manila")
+    tz = ZoneInfo(Config.TIMEZONE)
 
     start_timestamp = int(datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=tz).timestamp())
     end_timestamp = int(datetime.strptime(end_date, "%Y-%m-%d").replace(tzinfo=tz).timestamp()) - 1 # to exclude 00:00 data point of the next day

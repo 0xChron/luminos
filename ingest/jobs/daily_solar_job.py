@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from ingest.extract.solar import SolarExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
+from ingest.config import Config
 import logging
 
 logging.basicConfig(
@@ -12,7 +13,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def run_solar_job(target_timestamp=None):
-    tz = ZoneInfo("Asia/Manila")
+    tz = ZoneInfo(Config.TIMEZONE)
 
     if target_timestamp is None:
         today = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
