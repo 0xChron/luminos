@@ -1,16 +1,13 @@
+import logging
+import argparse
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from ingest.extract.solar import SolarExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
 from ingest.config import Config
-import logging
-import argparse
+from ingest.utils.logging import setup_logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
+setup_logging()
 logger = logging.getLogger(__name__)
 
 def run_backfill_solar_job(start_date: str, end_date: str) -> None:

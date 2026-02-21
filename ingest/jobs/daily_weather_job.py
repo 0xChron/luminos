@@ -3,13 +3,10 @@ from zoneinfo import ZoneInfo
 from ingest.extract.weather import WeatherExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
 from ingest.config import Config
+from ingest.utils.logging import setup_logging
 import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
+setup_logging()
 logger = logging.getLogger(__name__)
 
 def run_weather_job(target_date=None):

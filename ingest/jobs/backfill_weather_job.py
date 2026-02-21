@@ -1,13 +1,10 @@
-from ingest.extract.weather import WeatherExtractor
-from ingest.load.duckdb_loader import DuckDBLoader
 import logging
 import argparse
+from ingest.extract.weather import WeatherExtractor
+from ingest.load.duckdb_loader import DuckDBLoader
+from ingest.utils.logging import setup_logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
+setup_logging()
 logger = logging.getLogger(__name__)
 
 def run_backfill_weather_job(start_date: str, end_date: str) -> None:

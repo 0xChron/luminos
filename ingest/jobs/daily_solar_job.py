@@ -3,13 +3,10 @@ from zoneinfo import ZoneInfo
 from ingest.extract.solar import SolarExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
 from ingest.config import Config
+from ingest.utils.logging import setup_logging
 import logging
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(module)s | %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
+setup_logging()
 logger = logging.getLogger(__name__)
 
 def run_solar_job(target_timestamp=None):

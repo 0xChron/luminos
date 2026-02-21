@@ -60,46 +60,6 @@ class DuckDBLoader:
             )
         """)
 
-    # def load_solar_data(self, df: pd.DataFrame) -> int:
-    #     if df.empty:
-    #         return 0
-        
-    #     # delete existing records for the date range
-    #     min_date = df['timestamp'].min()
-    #     max_date = df['timestamp'].max()
-        
-    #     self.conn.execute(f"""
-    #         DELETE FROM fact_solar_energy_data 
-    #         WHERE timestamp BETWEEN '{min_date}' AND '{max_date}'
-    #     """)
-        
-    #     # insert new records
-    #     self.conn.execute("""
-    #         INSERT INTO fact_solar_energy_data 
-    #         (
-    #             timestamp, 
-    #             generation,
-    #             consumption,
-    #             grid_feed_in, 
-    #             grid_purchase,
-    #             charge_power,
-    #             discharge_power,
-    #             battery_soc
-    #         )
-    #         SELECT 
-    #             timestamp, 
-    #             generation,
-    #             consumption,
-    #             grid_feed_in,
-    #             grid_purchase, 
-    #             charge_power,
-    #             discharge_power,
-    #             battery_soc
-    #         FROM df
-    #     """)
-        
-    #     return len(df)
-
     def load_solar_data(self, df: pd.DataFrame) -> int:
         if df.empty:
             return 0
