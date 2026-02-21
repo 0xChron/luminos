@@ -1,7 +1,10 @@
 import requests
 import hashlib
+import time
+import logging
 from ingest.config import Config
 
+logger = logging.getLogger(__name__)
 
 class DeyeCloudClient:
     def __init__(self):
@@ -13,6 +16,8 @@ class DeyeCloudClient:
         self.password = Config.PASSWORD
         self.station_id = Config.STATION_ID
         self.token = None
+        self.refresh_token = None
+        self.token_expiry = None 
 
 
     def get_token(self) -> str:
@@ -30,13 +35,32 @@ class DeyeCloudClient:
         try:
             response = requests.post(self.token_url, headers=headers, json=data)
             response.raise_for_status()
-            self.token = response.json().get('accessToken')
+
+            token_data = response.json()
+            self.token = token_data.get('accessToken')
+            self.refresh_token = token_data.get('refreshToken')
+
+            expires_in = int(token_data.get('expiresIn'))
+            self.token_expiry = int(time.time()) + expires_in
+
             return self.token
         
         except requests.exceptions.HTTPError as err:
-            print(f'HTTP error occurred: {err}')
+            logger.error(f'http error occurred: {err}')
+            raise
         except Exception as err:
-            print(f'Other error occurred: {err}')
+            logger.error(f'other error occurred: {err}')
+            raise
+
+    def _is_token_expired(self) -> bool:
+        if not self.token or not self.token_expiry:
+            return True
+    
+        # refresh 5 minutes before actual expiry
+        current_time = int(time.time())
+        buffer_seconds = 300
+        
+        return current_time >= (self.token_expiry - buffer_seconds)
 
 
     def get_solar_data(self, start_timestamp: int, end_timestamp: int) -> dict:
@@ -49,15 +73,28 @@ class DeyeCloudClient:
         try:
             response = requests.post(self.solar_data_url, headers=self._get_headers(), json=data)
             response.raise_for_status()
+
+            logger.info(f"successfully fetched solar data for timestamps {start_timestamp} to {end_timestamp}")
             return response.json()
         
         except requests.exceptions.HTTPError as err:
-            print(f'HTTP error occurred: {err}')
+            # if 401 unauthorized, force token refresh and retry once
+            if err.response.status_code == 401:
+                logger.info("Token expired, refreshing...")
+                self.token = None
+                self.token_expiry = None
+                response = requests.post(self.solar_data_url, headers=self._get_headers(), json=data)
+                response.raise_for_status()
+                return response.json()
+            logger.error(f'http error occurred: {err}')
+            raise
         except Exception as err:
-            print(f'Other error occurred: {err}')
+            logger.error(f'other error occurred: {err}')
+            raise   
 
 
     def _get_headers(self) -> dict[str, str]:
-        if not self.token:
+        if self._is_token_expired():
             self.get_token()
+
         return {'Content-Type': 'application/json', 'Authorization': 'bearer ' + self.token}
