@@ -1,7 +1,10 @@
 import openmeteo_requests
 import requests_cache
+import logging
 from retry_requests import retry
 from ingest.config import Config
+
+logger = logging.getLogger(__name__)
 
 class OpenMeteoClient:
     def __init__(self, 
@@ -45,11 +48,13 @@ class OpenMeteoClient:
 
         try:
             response = self.client.weather_api(self.url, params=data)
+
+            logger.info(f"successfully fetched weather data for date range {start_date} to {end_date}")
             return response[0]
 
         except Exception as err:
-            print(f"Error fetching weather data: {err}")
-            return None
+            logger.error(f"error fetching weather data: {err}")
+            raise
         
     def _initialize_client(self):
         cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
