@@ -9,6 +9,8 @@ class DuckDBLoader:
 
     def __enter__(self):
         self.conn = duckdb.connect(self.db_path)
+        self.conn.execute("CREATE SCHEMA IF NOT EXISTS raw;")
+        self.conn.execute("SET schema 'raw';") 
         self._init_tables()
         return self
     
