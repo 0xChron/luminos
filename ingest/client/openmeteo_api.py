@@ -16,20 +16,8 @@ class OpenMeteoClient:
         self.longitude = longitude
         self.timezone = timezone
         self.url = Config.WEATHER_BASE_URL
-        self.hourly_parameters = ["temperature_2m", 
-            "cloud_cover", 
-            "precipitation", 
-            "wind_speed_10m", 
-            "relative_humidity_2m", 
-            "weather_code"
-        ]
-        self.daily_parameters = ["shortwave_radiation_sum", 
-            "sunshine_duration", 
-            "daylight_duration", 
-            "uv_index_clear_sky_max", 
-            "temperature_2m_max", 
-            "temperature_2m_min"
-        ]
+        self.hourly_parameters = Config.HOURLY_PARAMETERS
+        self.daily_parameters = Config.DAILY_PARAMETERS
 
         self.client = self._initialize_client()
         

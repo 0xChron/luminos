@@ -17,8 +17,30 @@ class Config:
     LATITUDE = os.getenv('LATITUDE')
     LONGITUDE = os.getenv('LONGITUDE')
     TIMEZONE = os.getenv('TIMEZONE', 'Asia/Singapore')
-    WEATHER_BASE_URL = 'https://api.open-meteo.com/v1/forecast'
+    WEATHER_BASE_URL = 'https://archive-api.open-meteo.com/v1/archive'
     TIMEZONE = "Asia/Manila"
+    HOURLY_PARAMETERS = [
+        "relative_humidity_2m", 
+        "wind_speed_10m", 
+        "is_day", 
+        "sunshine_duration", 
+        "temperature_2m", 
+        "cloud_cover", 
+        "rain", 
+        "weather_code"
+        ]
+    DAILY_PARAMETERS = [
+        "shortwave_radiation_sum", 
+        "sunshine_duration", 
+        "daylight_duration", 
+        "cloud_cover_mean", 
+        "temperature_2m_mean", 
+        "relative_humidity_2m_mean", 
+        "rain_sum", 
+        "wind_speed_10m_mean", 
+        "weather_code"
+        ]
+
 
     DUCKDB_PATH = os.getenv('DUCKDB_PATH')
 

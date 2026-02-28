@@ -26,12 +26,14 @@ class WeatherExtractor:
     
     def _transform_hourly(self, response: dict) -> pd.DataFrame:
         hourly = response.Hourly()
-        hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
-        hourly_cloud_cover = hourly.Variables(1).ValuesAsNumpy()
-        hourly_precipitation = hourly.Variables(2).ValuesAsNumpy()
-        hourly_wind_speed_10m = hourly.Variables(3).ValuesAsNumpy()
-        hourly_relative_humidity_2m = hourly.Variables(4).ValuesAsNumpy()
-        hourly_weather_code = hourly.Variables(5).ValuesAsNumpy()
+        hourly_relative_humidity_2m = hourly.Variables(0).ValuesAsNumpy()
+        hourly_wind_speed_10m = hourly.Variables(1).ValuesAsNumpy()
+        hourly_is_day = hourly.Variables(2).ValuesAsNumpy()
+        hourly_sunshine_duration = hourly.Variables(3).ValuesAsNumpy()
+        hourly_temperature_2m = hourly.Variables(4).ValuesAsNumpy()
+        hourly_cloud_cover = hourly.Variables(5).ValuesAsNumpy()
+        hourly_rain = hourly.Variables(6).ValuesAsNumpy()
+        hourly_weather_code = hourly.Variables(7).ValuesAsNumpy()
 
         hourly_data = {"timestamp": pd.date_range(
             start = pd.to_datetime(hourly.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
@@ -40,11 +42,13 @@ class WeatherExtractor:
             inclusive = "left"
         )}
 
+        hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+        hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+        hourly_data["is_day"] = hourly_is_day
+        hourly_data["sunshine_duration"] = hourly_sunshine_duration
         hourly_data["temperature_2m"] = hourly_temperature_2m
         hourly_data["cloud_cover"] = hourly_cloud_cover
-        hourly_data["precipitation"] = hourly_precipitation
-        hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
-        hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+        hourly_data["rain"] = hourly_rain
         hourly_data["weather_code"] = hourly_weather_code
 
         return pd.DataFrame(data=hourly_data)
@@ -54,9 +58,12 @@ class WeatherExtractor:
         daily_shortwave_radiation_sum = daily.Variables(0).ValuesAsNumpy()
         daily_sunshine_duration = daily.Variables(1).ValuesAsNumpy()
         daily_daylight_duration = daily.Variables(2).ValuesAsNumpy()
-        daily_uv_index_clear_sky_max = daily.Variables(3).ValuesAsNumpy()
-        daily_temperature_2m_max = daily.Variables(4).ValuesAsNumpy()
-        daily_temperature_2m_min = daily.Variables(5).ValuesAsNumpy()
+        daily_cloud_cover_mean = daily.Variables(3).ValuesAsNumpy()
+        daily_temperature_2m_mean = daily.Variables(4).ValuesAsNumpy()
+        daily_relative_humidity_2m_mean = daily.Variables(5).ValuesAsNumpy()
+        daily_rain_sum = daily.Variables(6).ValuesAsNumpy()
+        daily_wind_speed_10m_mean = daily.Variables(7).ValuesAsNumpy()
+        daily_weather_code = daily.Variables(8).ValuesAsNumpy()
 
         daily_data = {"timestamp": pd.date_range(
             start = pd.to_datetime(daily.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
@@ -68,8 +75,11 @@ class WeatherExtractor:
         daily_data["shortwave_radiation_sum"] = daily_shortwave_radiation_sum
         daily_data["sunshine_duration"] = daily_sunshine_duration
         daily_data["daylight_duration"] = daily_daylight_duration
-        daily_data["uv_index_clear_sky_max"] = daily_uv_index_clear_sky_max
-        daily_data["temperature_2m_max"] = daily_temperature_2m_max
-        daily_data["temperature_2m_min"] = daily_temperature_2m_min
+        daily_data["cloud_cover_mean"] = daily_cloud_cover_mean
+        daily_data["temperature_2m_mean"] = daily_temperature_2m_mean
+        daily_data["relative_humidity_2m_mean"] = daily_relative_humidity_2m_mean
+        daily_data["rain_sum"] = daily_rain_sum
+        daily_data["wind_speed_10m_mean"] = daily_wind_speed_10m_mean
+        daily_data["weather_code"] = daily_weather_code
 
         return pd.DataFrame(data=daily_data)

@@ -19,7 +19,7 @@ class DuckDBLoader:
             self.conn.close()
             
     def _init_tables(self):
-        # solar energy fact table
+        # solar energy 5 minute
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS raw_solar_energy_5_min (
                 timestamp DOUBLE PRIMARY KEY,
@@ -34,30 +34,35 @@ class DuckDBLoader:
             )
         """)
 
-        # weather hourly dimension
+        # weather hourly
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS raw_weather_data_hourly (
                 timestamp TIMESTAMP PRIMARY KEY,
+                relative_humidity_2m DOUBLE,
+                wind_speed_10m DOUBLE,
+                is_day INT,
+                sunshine_duration DOUBLE,
                 temperature_2m DOUBLE,
                 cloud_cover DOUBLE,
-                precipitation DOUBLE,
-                wind_speed_10m DOUBLE,
-                relative_humidity_2m DOUBLE,
-                weather_code INTEGER,
+                rain DOUBLE,
+                weather_code INT,
                 loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
         
-        # weather daily dimension
+        # weather daily 
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS raw_weather_data_daily (
                 timestamp TIMESTAMP PRIMARY KEY,
                 shortwave_radiation_sum DOUBLE,
                 sunshine_duration DOUBLE,
                 daylight_duration DOUBLE,
-                uv_index_clear_sky_max DOUBLE,
-                temperature_2m_max DOUBLE,
-                temperature_2m_min DOUBLE,
+                cloud_cover_mean DOUBLE,
+                temperature_2m_mean DOUBLE,
+                relative_humidity_2m_mean DOUBLE,
+                rain_sum DOUBLE,
+                wind_speed_10m_mean DOUBLE,
+                weather_code INT,
                 loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
@@ -99,21 +104,25 @@ class DuckDBLoader:
         self.conn.execute("""
             INSERT OR REPLACE INTO raw_weather_data_hourly 
             (
-                timestamp, 
+                timestamp,
+                relative_humidity_2m,
+                wind_speed_10m,
+                is_day,
+                sunshine_duration,
                 temperature_2m,
                 cloud_cover,
-                precipitation,
-                wind_speed_10m, 
-                relative_humidity_2m, 
+                rain,
                 weather_code
             )
             SELECT
-                timestamp, 
+                timestamp,
+                relative_humidity_2m,
+                wind_speed_10m,
+                is_day,
+                sunshine_duration,
                 temperature_2m,
                 cloud_cover,
-                precipitation,
-                wind_speed_10m, 
-                relative_humidity_2m, 
+                rain,
                 weather_code
             FROM df
         """)
@@ -127,22 +136,28 @@ class DuckDBLoader:
         self.conn.execute("""
             INSERT OR REPLACE INTO raw_weather_data_daily 
             (
-                timestamp, 
-                shortwave_radiation_sum, 
+                timestamp,
+                shortwave_radiation_sum,
                 sunshine_duration,
-                daylight_duration, 
-                uv_index_clear_sky_max,
-                temperature_2m_max, 
-                temperature_2m_min
+                daylight_duration,
+                cloud_cover_mean,
+                temperature_2m_mean,
+                relative_humidity_2m_mean,
+                rain_sum,
+                wind_speed_10m_mean,
+                weather_code
             )
             SELECT 
-                timestamp, 
-                shortwave_radiation_sum, 
+                timestamp,
+                shortwave_radiation_sum,
                 sunshine_duration,
-                daylight_duration, 
-                uv_index_clear_sky_max,
-                temperature_2m_max, 
-                temperature_2m_min
+                daylight_duration,
+                cloud_cover_mean,
+                temperature_2m_mean,
+                relative_humidity_2m_mean,
+                rain_sum,
+                wind_speed_10m_mean,
+                weather_code
             FROM df
         """)
             
