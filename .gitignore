@@ -15,5 +15,12 @@ wheels/
 
 # Notes
 NOTES.md
+SCHEMA.md
 main.ipynb
 main.py
+
+# Development logs
+logs/
+
+# Test first
+Makefile

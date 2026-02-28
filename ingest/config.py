@@ -20,7 +20,7 @@ class Config:
     WEATHER_BASE_URL = 'https://api.open-meteo.com/v1/forecast'
     TIMEZONE = "Asia/Manila"
 
-    DUCKDB_PATH = 'weather_warehouse.duckdb'
+    DUCKDB_PATH = os.getenv('DUCKDB_PATH')
 
     SOLAR_LAG_DAYS = 1
     WEATHER_LOOKBACK_DAYS = 7
