@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: dim_weather_codes
+    description: Dimension table for weather codes
+    columns:
+      - name: weather_code
+        description: WMO weather code (0-99)
+        tests:
+          - not_null
+          - unique
+      - name: description
+        description: Text description of the weather code
+  
+  - name: dim_date
+    description: Dimension table for dates with various date attributes
+    columns:
+      - name: date_key
+        description: Surrogate key for the date (YYYYMMDD as integer)
+        tests:
+          - not_null
+          - unique
+      - name: date_day
+        description: date
+      - name: year
+        description: Year component of the date
+      - name: quarter
+        description: Quarter of the year (1-4)
+      - name: quarter_name
+        description: Name of the quarter (e.g., 'Q1 2026')
+      - name: month_number
+        description: Month number (1-12)
+      - name: month_name
+        description: Name of the month (e.g., 'January')
+      - name: year_month
+        description: Year and month in 'YYYY-MM' format
+      - name: week_of_year
+        description: Week number of the year (1-53)
+      - name: day_of_month
+        description: Day of the month (1-31)
+      - name: day_of_week_number
+        description: Day of the week as a number (0=Sunday, 6=Saturday)
+      - name: day_name
+        description: Name of the day of the week (e.g., 'Monday')
+      - name: day_of_year
+        description: Day number within the year (1-366)
+      - name: season
+        description: Philippines-specific seasons (wet for june-nov, dry for dec-may)
+      - name: is_weekend
+        description: Flag indicating if the date falls on a weekend
+  
+  - name: dim_time
+    description: Dimension table for time
+    columns:
+      - name: time_key
+        description: time
+        tests:
+          - not_null
+          - unique
+      - name: time
+        description: Time of day
+      - name: hour
+        description: Hour of the day (0-23)
+      - name: minute
+        description: Minute of the hour (0-59)
+      - name: is_daylight
+        description: Flag indicating if the time falls within daylight hours (6 AM to 6 PM)

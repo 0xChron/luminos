@@ -1,0 +1,85 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw data ingested from APIs
+    schema: raw 
+    
+    tables:
+      - name: raw_solar_energy_5_min
+        identifier: raw_solar_energy_5_min  
+        description: 5-minute grain solar energy data from Deye API
+        columns:
+          - name: timestamp
+            description: Unix timestamp (5-minute intervals)
+            tests:
+              - not_null
+              - unique
+          - name: generation
+            description: Solar generation power (kW)
+          - name: consumption
+            description: Home consumption power (kW)
+          - name: grid_feed_in
+            description: Power exported to grid (kW)
+          - name: grid_purchase
+            description: Power imported from grid (kW)
+          - name: charge_power
+            description: Battery charging power (kW)
+          - name: discharge_power
+            description: Battery discharging power (kW)
+          - name: battery_soc
+            description: Battery state of charge (%)
+          - name: loaded_at
+            description: Timestamp when raw data was loaded
+            
+      - name: raw_weather_data_hourly
+        identifier: raw_weather_data_hourly
+        description: Hourly weather observations from Open-Meteo API
+        columns:
+          - name: timestamp
+            description: Hourly timestamp
+            tests:
+              - not_null
+              - unique
+          - name: temperature_2m
+            description: Temperature at 2m height (°C)
+          - name: cloud_cover
+            description: Cloud cover percentage (%)
+          - name: precipitation
+            description: Precipitation (mm)
+          - name: wind_speed_10m
+            description: Wind speed at 10m height (km/h)
+          - name: relative_humidity_2m
+            description: Relative humidity at 2m (%)
+          - name: weather_code
+            description: WMO weather code (0-99)
+          - name: loaded_at
+            description: Timestamp when raw data was loaded
+            
+      - name: raw_weather_data_daily
+        identifier: raw_weather_data_daily
+        description: Daily weather aggregations from Open-Meteo API
+        columns:
+          - name: timestamp
+            description: Daily timestamp (start of day)
+            tests:
+              - not_null
+              - unique
+          - name: shortwave_radiation_sum
+            description: Total solar radiation (MJ/m²)
+          - name: sunshine_duration
+            description: Sunshine duration (seconds)
+          - name: daylight_duration
+            description: Daylight duration (seconds)
+          - name: uv_index_clear_sky_max
+            description: Maximum UV index under clear sky (index)
+          - name: temperature_2m_max
+            description: Maximum temperature (°C)
+          - name: temperature_2m_min
+            description: Minimum temperature (°C) 
+          - name: loaded_at
+            description: Timestamp when raw data was loaded
+
+    freshness:
+      warn_after: {count: 2, period: day}
+      error_after: {count: 3, period: day}
