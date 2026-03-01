@@ -49,19 +49,3 @@ models:
       - name: is_weekend
         description: Flag indicating if the date falls on a weekend
   
-  - name: dim_time
-    description: Dimension table for time
-    columns:
-      - name: time_key
-        description: time
-        tests:
-          - not_null
-          - unique
-      - name: time
-        description: Time of day
-      - name: hour
-        description: Hour of the day (0-23)
-      - name: minute
-        description: Minute of the hour (0-59)
-      - name: is_daylight
-        description: Flag indicating if the time falls within daylight hours (6 AM to 6 PM)

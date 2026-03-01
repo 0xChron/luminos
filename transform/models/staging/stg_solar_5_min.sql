@@ -1,5 +1,5 @@
 with source as (
-    select * from {{ source('raw', 'raw_solar_energy_5_min') }}
+    select * from {{ source('raw', 'raw_solar_5_min') }}
 ),
 
 transformed as (

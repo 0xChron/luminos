@@ -1,6 +1,6 @@
 with base as (
     select *
-    from {{ ref('stg_solar_energy_5_min') }}
+    from {{ ref('stg_solar_5_min') }}
 ), 
 
 solar_energy_hourly as (

@@ -22,32 +22,6 @@ models:
       - name: discharge_kwh
         description: Total power discharged from the battery in kWh
   
-  - name: fact_solar_hourly
-    description: Fact table for hourly solar energy data
-    columns:
-      - name: date
-        description: Date in YYYY-MM-DD format
-        tests:
-          - not_null
-      - name: hour_ts
-        description: Hour timestamp in YYYY-MM-DD HH:00:00 format
-        tests:
-          - not_null
-      - name: generation_kwh
-        description: Generation of solar energy in kWh
-      - name: consumption_kwh
-        description: Consumption of solar energy in kWh
-      - name: grid_feed_in_kwh
-        description: Total solar energy fed into the grid in kWh
-      - name: grid_purchase_kwh
-        description: Total solar energy purchased from the grid in kWh
-      - name: charge_kwh
-        description: Total power used to charge the battery in kWh
-      - name: discharge_kwh
-        description: Total power discharged from the battery in kWh
-      - name: battery_soc_eoh
-        description: State of charge of the battery at the end of the hour in percentage
-
   - name: fact_weather_daily
     description: Fact table for daily weather data
     columns: 

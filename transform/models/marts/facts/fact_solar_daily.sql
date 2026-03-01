@@ -1,6 +1,6 @@
 with base as (
     select *
-    from {{ ref('stg_solar_energy_5_min') }}
+    from {{ ref('stg_solar_5_min') }}
 ), 
 
 -- kwh formula: (power in watts) * (grain: 5 minute) * (1 hour / 60 mins) * (1 kW / 1000 W) = kWh

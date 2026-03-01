@@ -1,6 +1,6 @@
 with base as (
     select *
-    from {{ ref('stg_weather_data_hourly') }}
+    from {{ ref('stg_weather_hourly') }}
 ),
 
 weather_hourly as (

@@ -6,8 +6,8 @@ sources:
     schema: raw 
     
     tables:
-      - name: raw_solar_energy_5_min
-        identifier: raw_solar_energy_5_min  
+      - name: raw_solar_5_min
+        identifier: raw_solar_5_min  
         description: 5-minute grain solar energy data from Deye API
         columns:
           - name: timestamp
@@ -32,8 +32,8 @@ sources:
           - name: loaded_at
             description: Timestamp when raw data was loaded
             
-      - name: raw_weather_data_hourly
-        identifier: raw_weather_data_hourly
+      - name: raw_weather_hourly
+        identifier: raw_weather_hourly
         description: Hourly weather observations from Open-Meteo API
         columns:
           - name: timestamp
@@ -60,8 +60,8 @@ sources:
           - name: loaded_at
             description: Timestamp when raw data was loaded
             
-      - name: raw_weather_data_daily
-        identifier: raw_weather_data_daily
+      - name: raw_weather_daily
+        identifier: raw_weather_daily
         description: Daily weather aggregations from Open-Meteo API
         columns:
           - name: timestamp
@@ -93,3 +93,86 @@ sources:
     freshness:
       warn_after: {count: 2, period: day}
       error_after: {count: 3, period: day}
+
+
+models:
+  - name: stg_solar_5_min
+    description: Staging table for 5 minute solar energy data
+    columns:
+      - name: timestamp
+        description: 5-minute timestamp
+        tests:
+          - not_null
+          - unique
+      - name: generation
+        description: Solar generation power (W)
+      - name: consumption
+        description: Home consumption power (W)
+      - name: grid_feed_in
+        description: Power exported to grid (W)
+      - name: grid_purchase
+        description: Power imported from grid (W)
+      - name: charge_power
+        description: Battery charging power (W)
+      - name: discharge_power
+        description: Battery discharging power (W)
+      - name: battery_soc
+        description: Battery state of charge (%) 
+      - name: loaded_at
+        description: Timestamp when data was loaded into staging
+  
+  - name: stg_weather_hourly
+    description: Staging table for hourly weather data
+    columns:
+      - name: timestamp
+        description: Hourly timestamp
+        tests:
+          - not_null
+          - unique
+      - name: relative_humidity_2m
+        description: Relative humidity at 2m (%)
+      - name: wind_speed_10m
+        description: Wind speed at 10m height (km/h)
+      - name: is_day
+        description: Indicator if it is daytime or night time 
+      - name: sunshine_duration
+        description: Sunshine duration in the hour (seconds)
+      - name: temperature_2m
+        description: Temperature at 2m height (°C)
+      - name: cloud_cover
+        description: Cloud cover percentage (%)
+      - name: rain
+        description: Rainfall in the hour (mm)
+      - name: weather_code
+        description: WMO weather code (0-99)
+      - name: loaded_at
+        description: Timestamp when data was loaded into staging
+
+  - name: stg_weather_daily
+    description: Staging table for daily weather data
+    columns: 
+      - name: timestamp
+        description: Daily timestamp
+        tests:
+          - not_null
+          - unique
+      - name: shortwave_radiation_sum
+        description: Total solar radiation (MJ/m²)
+      - name: sunshine_duration
+        description: Sunshine duration (seconds)
+      - name: daylight_duration
+        description: Daylight duration (seconds)
+      - name: cloud_cover_mean
+        description: Average cloud cover percentage (%)
+      - name: temperature_2m_mean
+        description: Mean temperature (°C)
+      - name: relative_humidity_2m_mean
+        description: Mean relative humidity at 2m (%)
+      - name: rain_sum
+        description: Total rainfall in the day (mm)
+      - name: wind_speed_10m_mean
+        description: Average wind speed at 10m height (km/h)
+      - name: weather_code
+        description: WMO weather code (0-99)
+      - name: loaded_at
+        description: Timestamp when data was loaded into staging  
