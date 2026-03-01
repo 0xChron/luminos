@@ -5,9 +5,6 @@ with source as (
 transformed as (
     select 
         timestamp,
-        {{ date_key('timestamp') }} as date_key,
-        {{ time_key('timestamp') }} as time_key,
-
         cast(relative_humidity_2m as double) as relative_humidity_2m,
         cast(wind_speed_10m as double) as wind_speed_10m,
         cast(is_day as int) as is_day,

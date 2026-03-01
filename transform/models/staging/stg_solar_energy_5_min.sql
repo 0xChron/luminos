@@ -5,9 +5,6 @@ with source as (
 transformed as (
     select 
         to_timestamp(timestamp) as timestamp,
-        {{ date_key('to_timestamp(timestamp)') }} as date_key,
-        {{ time_key('to_timestamp(timestamp)') }} as time_key,
-
         cast(generation as double) as generation,
         cast(consumption as double) as consumption,
         cast(grid_feed_in as double) as grid_feed_in,
