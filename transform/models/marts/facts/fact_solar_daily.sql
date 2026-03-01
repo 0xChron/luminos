@@ -6,7 +6,7 @@ with base as (
 -- kwh formula: (power in watts) * (grain: 5 minute) * (1 hour / 60 mins) * (1 kW / 1000 W) = kWh
 solar_energy_daily as (
     select
-        date_key,
+        cast(timestamp as date) as date,
         sum(generation) * (5.0 / (60.0 * 1000) ) as generation_kwh,
         sum(consumption) * (5.0 / (60.0 * 1000) ) as consumption_kwh,
         sum(grid_feed_in) * (5.0 / (60.0 * 1000) ) * (-1) as grid_feed_in_kwh,
@@ -14,8 +14,8 @@ solar_energy_daily as (
         sum(charge_power) * (5.0 / (60.0 * 1000) ) * (-1) as charge_kwh,
         sum(discharge_power) * (5.0 / (60.0 * 1000) ) as discharge_kwh
     from base
-    group by date_key
+    group by date
 )
 
 select * from solar_energy_daily
-order by date_key
+order by date

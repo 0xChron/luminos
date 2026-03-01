@@ -1,11 +1,11 @@
 version: 2
 
 models:
-  - name: fact_solar_energy_daily
+  - name: fact_solar_daily
     description: Fact table for daily solar energy data
     columns: 
-      - name: date_key
-        description: Date key in YYYYMMDD format
+      - name: date
+        description: Date in YYYY-MM-DD format
         tests:
           - not_null
           - unique
@@ -22,15 +22,15 @@ models:
       - name: discharge_kwh
         description: Total power discharged from the battery in kWh
   
-  - name: fact_solar_energy_hourly
+  - name: fact_solar_hourly
     description: Fact table for hourly solar energy data
     columns:
-      - name: date_key
-        description: Date key in YYYYMMDD format
+      - name: date
+        description: Date in YYYY-MM-DD format
         tests:
           - not_null
-      - name: hour_key
-        description: Hour key 
+      - name: hour_ts
+        description: Hour timestamp in YYYY-MM-DD HH:00:00 format
         tests:
           - not_null
       - name: generation_kwh
@@ -48,4 +48,57 @@ models:
       - name: battery_soc_eoh
         description: State of charge of the battery at the end of the hour in percentage
 
-  
+  - name: fact_weather_daily
+    description: Fact table for daily weather data
+    columns: 
+      - name: date
+        description: Date in YYYY-MM-DD format
+        tests:
+          - not_null
+          - unique
+      - name: shortwave_radiation_sum
+        description: Total solar radiation (MJ/m²)
+      - name: sunshine_duration
+        description: Sunshine duration (seconds)
+      - name: daylight_duration
+        description: Daylight duration (seconds)
+      - name: cloud_cover_mean
+        description: Average cloud cover percentage (%)
+      - name: temperature_2m_mean
+        description: Mean temperature (°C)
+      - name: relative_humidity_2m_mean
+        description: Mean relative humidity at 2m (%)
+      - name: rain_sum
+        description: Total rainfall in the day (mm)
+      - name: wind_speed_10m_mean
+        description: Average wind speed at 10m height (km/h)
+      - name: weather_code
+        description: WMO weather code (0-99)
+
+  - name: fact_weather_hourly
+    description: Fact table for hourly weather data
+    columns:
+      - name: date
+        description: Date in YYYY-MM-DD format
+        tests:
+          - not_null
+      - name: hour_ts
+        description: Hour timestamp in YYYY-MM-DD HH:00:00 format
+        tests:
+          - not_null
+      - name: relative_humidity_2m
+        description: Relative humidity at 2m (%)
+      - name: wind_speed_10m
+        description: Wind speed at 10m height (km/h)
+      - name: is_day
+        description: Indicator if it is daytime (true) or night time (false)
+      - name: sunshine_duration
+        description: Sunshine duration in the hour (seconds)
+      - name: temperature_2m
+        description: Temperature at 2m height (°C)
+      - name: cloud_cover
+        description: Cloud cover percentage (%)
+      - name: rain
+        description: Rainfall in the hour (mm)
+      - name: weather_code
+        description: WMO weather code (0-99)
