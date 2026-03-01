@@ -18,7 +18,7 @@ class Config:
     LONGITUDE = os.getenv('LONGITUDE')
     TIMEZONE = os.getenv('TIMEZONE', 'Asia/Singapore')
     WEATHER_BASE_URL = 'https://archive-api.open-meteo.com/v1/archive'
-    TIMEZONE = "Asia/Manila"
+    TIMEZONE = "Asia/Singapore"
     HOURLY_PARAMETERS = [
         "relative_humidity_2m", 
         "wind_speed_10m", 

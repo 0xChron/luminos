@@ -37,7 +37,7 @@ class DuckDBLoader:
         # weather hourly
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS raw_weather_data_hourly (
-                timestamp TIMESTAMP PRIMARY KEY,
+                timestamp TIMESTAMPTZ PRIMARY KEY,
                 relative_humidity_2m DOUBLE,
                 wind_speed_10m DOUBLE,
                 is_day INT,
@@ -53,7 +53,7 @@ class DuckDBLoader:
         # weather daily 
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS raw_weather_data_daily (
-                timestamp TIMESTAMP PRIMARY KEY,
+                timestamp TIMESTAMPTZ PRIMARY KEY,
                 shortwave_radiation_sum DOUBLE,
                 sunshine_duration DOUBLE,
                 daylight_duration DOUBLE,

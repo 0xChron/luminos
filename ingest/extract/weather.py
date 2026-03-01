@@ -1,6 +1,7 @@
 import pandas as pd
 import logging
 from ingest.client.openmeteo_api import OpenMeteoClient
+from ingest.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +37,8 @@ class WeatherExtractor:
         hourly_weather_code = hourly.Variables(7).ValuesAsNumpy()
 
         hourly_data = {"timestamp": pd.date_range(
-            start = pd.to_datetime(hourly.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
-            end =  pd.to_datetime(hourly.TimeEnd() + response.UtcOffsetSeconds(), unit = "s", utc = True),
+            start = pd.to_datetime(hourly.Time(), unit = "s", utc = True),
+            end =  pd.to_datetime(hourly.TimeEnd(), unit = "s", utc = True),
             freq = pd.Timedelta(seconds = hourly.Interval()),
             inclusive = "left"
         )}
@@ -51,7 +52,9 @@ class WeatherExtractor:
         hourly_data["rain"] = hourly_rain
         hourly_data["weather_code"] = hourly_weather_code
 
-        return pd.DataFrame(data=hourly_data)
+        hourly_df = pd.DataFrame(data=hourly_data)
+        hourly_df["timestamp"] = hourly_df["timestamp"].dt.tz_convert(Config.TIMEZONE)
+        return hourly_df
     
     def _transform_daily(self, response: dict) -> pd.DataFrame:
         daily = response.Daily()
@@ -66,8 +69,8 @@ class WeatherExtractor:
         daily_weather_code = daily.Variables(8).ValuesAsNumpy()
 
         daily_data = {"timestamp": pd.date_range(
-            start = pd.to_datetime(daily.Time() + response.UtcOffsetSeconds(), unit = "s", utc = True),
-            end =  pd.to_datetime(daily.TimeEnd() + response.UtcOffsetSeconds(), unit = "s", utc = True),
+            start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
+            end =  pd.to_datetime(daily.TimeEnd(), unit = "s", utc = True),
             freq = pd.Timedelta(seconds = daily.Interval()),
             inclusive = "left"
         )}
@@ -82,4 +85,6 @@ class WeatherExtractor:
         daily_data["wind_speed_10m_mean"] = daily_wind_speed_10m_mean
         daily_data["weather_code"] = daily_weather_code
 
-        return pd.DataFrame(data=daily_data)
+        daily_df = pd.DataFrame(data=daily_data)
+        daily_df["timestamp"] = daily_df["timestamp"].dt.tz_convert(Config.TIMEZONE)
+        return daily_df
