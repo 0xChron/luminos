@@ -41,16 +41,20 @@ sources:
             tests:
               - not_null
               - unique
+          - name: relative_humidity_2m
+            description: Relative humidity at 2m (%)
+          - name: wind_speed_10m
+            description: Wind speed at 10m height (km/h)
+          - name: is_day
+            description: Indicator if it is daytime (0 or 1)
+          - name: sunshine_duration
+            description: Sunshine duration in the hour (seconds)
           - name: temperature_2m
             description: Temperature at 2m height (°C)
           - name: cloud_cover
             description: Cloud cover percentage (%)
-          - name: precipitation
-            description: Precipitation (mm)
-          - name: wind_speed_10m
-            description: Wind speed at 10m height (km/h)
-          - name: relative_humidity_2m
-            description: Relative humidity at 2m (%)
+          - name: rain
+            description: Rainfall in the hour (mm)
           - name: weather_code
             description: WMO weather code (0-99)
           - name: loaded_at
@@ -71,12 +75,18 @@ sources:
             description: Sunshine duration (seconds)
           - name: daylight_duration
             description: Daylight duration (seconds)
-          - name: uv_index_clear_sky_max
-            description: Maximum UV index under clear sky (index)
-          - name: temperature_2m_max
-            description: Maximum temperature (°C)
-          - name: temperature_2m_min
-            description: Minimum temperature (°C) 
+          - name: cloud_cover_mean
+            description: Average cloud cover percentage (%)
+          - name: temperature_2m_mean
+            description: Mean temperature (°C)
+          - name: relative_humidity_2m_mean
+            description: Mean relative humidity at 2m (%)
+          - name: rain_sum
+            description: Total rainfall in the day (mm)
+          - name: wind_speed_10m_mean
+            description: Average wind speed at 10m height (km/h)
+          - name: weather_code
+            description: WMO weather code (0-99)
           - name: loaded_at
             description: Timestamp when raw data was loaded
 

@@ -8,11 +8,13 @@ transformed as (
         {{ date_key('timestamp') }} as date_key,
         {{ time_key('timestamp') }} as time_key,
 
+        cast(relative_humidity_2m as double) as relative_humidity_2m,
+        cast(wind_speed_10m as double) as wind_speed_10m,
+        cast(is_day as int) as is_day,
+        cast(sunshine_duration as double) as sunshine_duration,
         cast(temperature_2m as double) as temperature_2m,
         cast(cloud_cover as double) as cloud_cover,
-        cast(precipitation as double) as precipitation,
-        cast(wind_speed_10m as double) as wind_speed_10m,
-        cast(relative_humidity_2m as double) as relative_humidity_2m,
+        cast(rain as double) as rain,
         cast(weather_code as integer) as weather_code,
         loaded_at
     from source
