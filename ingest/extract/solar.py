@@ -2,6 +2,8 @@ import pandas as pd
 import logging
 from ingest.client.deye_api import DeyeCloudClient
 from ingest.config import Config
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,10 @@ class SolarExtractor:
     
     def _transform(self, raw_data: dict) -> pd.DataFrame:
         records = raw_data['stationDataItems']
-
+        if records:
+            logger.info(f"timestamp as utc: {datetime.fromtimestamp(records[0].get('timeStamp'), tz=ZoneInfo('UTC'))}")
+            logger.info(f"timestamp as local: {datetime.fromtimestamp(records[0].get('timeStamp'), tz=ZoneInfo(Config.TIMEZONE))}")
+        
         df = pd.DataFrame(records)
         df = df.rename(columns={
             'timeStamp': 'timestamp',
