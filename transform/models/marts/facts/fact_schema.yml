@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: fact_solar_energy_daily
+    description: Fact table for daily solar energy data
+    columns: 
+      - name: date_key
+        description: Date key in YYYYMMDD format
+        tests:
+          - not_null
+          - unique
+      - name: generation_kwh
+        description: Generation of solar energy in kWh
+      - name: consumption_kwh
+        description: Consumption of solar energy in kWh
+      - name: grid_feed_in_kwh
+        description: Total solar energy fed into the grid in kWh
+      - name: grid_purchase_kwh
+        description: Total solar energy purchased from the grid in kWh
+      - name: charge_kwh
+        description: Total power used to charge the battery in kWh
+      - name: discharge_kwh
+        description: Total power discharged from the battery in kWh
+  
+  - name: fact_solar_energy_hourly
+    description: Fact table for hourly solar energy data
+    columns:
+      - name: date_key
+        description: Date key in YYYYMMDD format
+        tests:
+          - not_null
+      - name: hour_key
+        description: Hour key 
+        tests:
+          - not_null
+      - name: generation_kwh
+        description: Generation of solar energy in kWh
+      - name: consumption_kwh
+        description: Consumption of solar energy in kWh
+      - name: grid_feed_in_kwh
+        description: Total solar energy fed into the grid in kWh
+      - name: grid_purchase_kwh
+        description: Total solar energy purchased from the grid in kWh
+      - name: charge_kwh
+        description: Total power used to charge the battery in kWh
+      - name: discharge_kwh
+        description: Total power discharged from the battery in kWh
+      - name: battery_soc_eoh
+        description: State of charge of the battery at the end of the hour in percentage
+
+  
