@@ -1,13 +1,15 @@
-### commands (specific to this project)
+### luminos dbt commands 
+
 - cd transform
-- uv run dbt run or `uv run dbt run --project-dir transform`
-- uv run dbt test or `uv run dbt test --project-dir transform`
-- dbt debug
+- uv run dbt seed --project-dir transform
+- uv run dbt run --project-dir transform
+- uv run dbt test --project-dir transform
+- uv run dbt debug
 - dbt seed
 - dbt clean
 
 
-### Resources:
+### resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
 - Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support

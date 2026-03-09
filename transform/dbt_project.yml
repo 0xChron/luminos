@@ -29,6 +29,9 @@ models:
     marts:
       +materialized: table
       +schema: marts
+    reports:
+      +materialized: view
+      +schema: reports
 
 seeds:
   transform:
