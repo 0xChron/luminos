@@ -21,7 +21,7 @@ class DuckDBLoader:
     def _init_tables(self):
         # solar energy 5 minute
         self.conn.execute("""
-            CREATE TABLE IF NOT EXISTS raw_solar_energy_5_min (
+            CREATE TABLE IF NOT EXISTS raw_solar_5_min (
                 timestamp DOUBLE PRIMARY KEY,
                 generation DOUBLE,
                 consumption DOUBLE,
@@ -36,7 +36,7 @@ class DuckDBLoader:
 
         # weather hourly
         self.conn.execute("""
-            CREATE TABLE IF NOT EXISTS raw_weather_data_hourly (
+            CREATE TABLE IF NOT EXISTS raw_weather_hourly (
                 timestamp TIMESTAMPTZ PRIMARY KEY,
                 relative_humidity_2m DOUBLE,
                 wind_speed_10m DOUBLE,
@@ -52,7 +52,7 @@ class DuckDBLoader:
         
         # weather daily 
         self.conn.execute("""
-            CREATE TABLE IF NOT EXISTS raw_weather_data_daily (
+            CREATE TABLE IF NOT EXISTS raw_weather_daily (
                 timestamp TIMESTAMPTZ PRIMARY KEY,
                 shortwave_radiation_sum DOUBLE,
                 sunshine_duration DOUBLE,
@@ -72,7 +72,7 @@ class DuckDBLoader:
             return 0
         
         self.conn.execute("""
-            INSERT OR REPLACE INTO raw_solar_energy_5_min 
+            INSERT OR REPLACE INTO raw_solar_5_min 
             (
                 timestamp, 
                 generation,
@@ -102,7 +102,7 @@ class DuckDBLoader:
             return 0
         
         self.conn.execute("""
-            INSERT OR REPLACE INTO raw_weather_data_hourly 
+            INSERT OR REPLACE INTO raw_weather_hourly 
             (
                 timestamp,
                 relative_humidity_2m,
@@ -134,7 +134,7 @@ class DuckDBLoader:
             return 0
         
         self.conn.execute("""
-            INSERT OR REPLACE INTO raw_weather_data_daily 
+            INSERT OR REPLACE INTO raw_weather_daily 
             (
                 timestamp,
                 shortwave_radiation_sum,
