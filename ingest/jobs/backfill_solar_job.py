@@ -1,6 +1,6 @@
 import logging
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from ingest.extract.solar import SolarExtractor
 from ingest.load.duckdb_loader import DuckDBLoader
@@ -12,10 +12,14 @@ logger = logging.getLogger(__name__)
 
 def run_backfill_solar_job(start_date: str, end_date: str) -> None:
     tz = ZoneInfo(Config.TIMEZONE)
+    start_dt = datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=tz)
+    end_dt = datetime.strptime(end_date, "%Y-%m-%d").replace(tzinfo=tz) + timedelta(days=1) # to include the entire end_date
 
-    start_timestamp = int(datetime.strptime(start_date, "%Y-%m-%d").replace(tzinfo=tz).timestamp())
-    end_timestamp = int(datetime.strptime(end_date, "%Y-%m-%d").replace(tzinfo=tz).timestamp()) - 1 # to exclude 00:00 data point of the next day
+    start_timestamp = int(start_dt.timestamp())
+    end_timestamp = int(end_dt.timestamp()) - 1
+    
     logger.info(f"date window: {start_date} -> {end_date}")
+    logger.info(f"timestamp range: {start_timestamp} ({start_dt}) -> {end_timestamp}")
 
     try:
         extractor = SolarExtractor()

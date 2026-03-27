@@ -42,7 +42,8 @@ class Config:
         ]
 
 
-    DUCKDB_PATH = os.getenv('DUCKDB_PATH')
+    DEV_DUCKDB_PATH = os.getenv('DUCKDB_PATH')
+    PROD_DUCKDB_PATH = os.getenv('PROD_DUCKDB_PATH')
 
     SOLAR_LAG_DAYS = 1
     WEATHER_LOOKBACK_DAYS = 7
