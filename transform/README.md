@@ -1,9 +1,11 @@
 ### luminos dbt commands 
 
 - cd transform
+- uv run dbt deps --project-dir transform
 - uv run dbt seed --project-dir transform
 - uv run dbt run --project-dir transform
 - uv run dbt test --project-dir transform
+- uv run dbt build --project-dir transform
 - uv run dbt debug
 - dbt seed
 - dbt clean

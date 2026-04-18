@@ -3,7 +3,7 @@ import pandas as pd
 from ingest.config import Config
 
 class DuckDBLoader:
-    def __init__(self, db_path: str = Config.PROD_DUCKDB_PATH):
+    def __init__(self, db_path: str = Config.DUCKDB_PATH):
         self.db_path = db_path
         self.conn = None
 
