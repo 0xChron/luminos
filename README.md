@@ -6,6 +6,10 @@
 
 ![luminos system architecture](assets/system-architecture.jpg)
 
+## data lineage
+
+![luminos data lineage](assets/data-lineage.jpg)
+
 ## features
 
 - **automated daily ingestion**: scheduled data collection at 2 am gmt+8
