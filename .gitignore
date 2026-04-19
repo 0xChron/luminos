@@ -30,3 +30,5 @@ profiles.yml
 .user.yml
 
 .DS_Store
+
+prepare-deployment.sh
