@@ -24,3 +24,9 @@ logs/
 
 # Test first
 Makefile
+
+# dbt 
+profiles.yml
+.user.yml
+
+.DS_Store
