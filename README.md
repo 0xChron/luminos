@@ -1,5 +1,6 @@
 # luminos
 
+**luminos** is an automated data pipeline that ingests solar energy metrics and weather data, transforms them into analytics-ready datasets, and enables monitoring and forecasting of generated solar energy performance.
 
 ## architecture
 
