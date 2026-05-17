@@ -4,11 +4,11 @@
 
 ## architecture
 
-![luminos system architecture](assets/system-architecture.jpg)
+![luminos system architecture](assets/images/system-architecture.jpg)
 
 ## data lineage
 
-![luminos data lineage](assets/data-lineage.jpg)
+![luminos data lineage](assets/images/data-lineage.jpg)
 
 ## features
 
