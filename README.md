@@ -1,6 +1,10 @@
 # luminos
 
-**luminos** is an automated data pipeline that ingests solar energy metrics and weather data, transforms them into analytics-ready datasets, and enables monitoring and forecasting of generated solar energy performance.
+**luminos** is an automated data platform that ingests solar energy metrics and weather data, transforms them into analytics-ready datasets, and enables monitoring and forecasting of generated solar energy performance.
+
+if you are interested in working with residential solar energy generation data, i have made my dataset public. you can access it here:
+
+[solar energy generation and weather data](https://www.kaggle.com/datasets/christiancanillas/solar-energy-generation-and-weather-data)
 
 ## architecture
 
