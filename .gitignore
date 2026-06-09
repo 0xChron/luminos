@@ -22,9 +22,6 @@ main.py
 # Development logs
 logs/
 
-# Test first
-Makefile
-
 # dbt 
 profiles.yml
 .user.yml
