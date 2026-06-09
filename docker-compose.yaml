@@ -24,7 +24,8 @@
 ---
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:3.2.0}
+  build: .
+  image: luminos-airflow:latest
   env_file:
     - ${ENV_FILE_PATH:-.env}
   environment:
@@ -48,17 +49,17 @@ x-airflow-common:
     DUCKDB_PATH: /luminos/luminos.duckdb
     # PROD_DUCKDB_PATH: /luminos/luminos.duckdb
 
-    _PIP_ADDITIONAL_REQUIREMENTS: >-
-      dbt-core>=1.11.6
-      dbt-duckdb>=1.10.1
-      duckdb>=1.4.4
-      numpy>=2.2.6
-      openmeteo-requests>=1.7.5
-      pandas>=2.3.3
-      requests>=2.32.5
-      requests-cache>=1.3.0
-      retry-requests>=2.0.0
-      python-dotenv>=1.0.0
+    # _PIP_ADDITIONAL_REQUIREMENTS: >-
+    #   dbt-core>=1.11.6
+    #   dbt-duckdb>=1.10.1
+    #   duckdb>=1.4.4
+    #   numpy>=2.2.6
+    #   openmeteo-requests>=1.7.5
+    #   pandas>=2.3.3
+    #   requests>=2.32.5
+    #   requests-cache>=1.3.0
+    #   retry-requests>=2.0.0
+    #   python-dotenv>=1.0.0
       
 
   volumes:
