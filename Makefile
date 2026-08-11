@@ -1,4 +1,4 @@
-.PHONY: backfill-solar backfill-weather dbt-run dbt-test dbt-build dbt-docs view airflow docker-build down
+.PHONY: backfill-solar backfill-weather dbt-run dbt-test dbt-build dbt-docs verify view airflow docker-build down
 
 START_DATE ?= 2026-03-15
 END_DATE ?= 2026-03-30
@@ -24,6 +24,12 @@ dbt-build:
 
 dbt-docs:
 	uv run dbt docs serve --project-dir transform --target dev
+
+# Local pre-PR gate: deps + dbt run/test on --target dev (does not ingest)
+verify:
+	uv sync
+	uv run dbt deps --project-dir transform
+	uv run dbt build --project-dir transform --target dev
 
 view:
 	duckdb luminos.duckdb -ui

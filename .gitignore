@@ -28,3 +28,4 @@ luminos.duckdb
 # Other files
 .DS_Store
 prepare-deployment.sh
+DEVELOPMENT.md
