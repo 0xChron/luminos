@@ -13,13 +13,20 @@ def run_solar_job(target_timestamp=None):
     tz = ZoneInfo(Config.TIMEZONE)
 
     if target_timestamp is None:
-        today = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
-        yesterday = today - timedelta(days=1)
-        logger.info(f"date window: {yesterday} -> {today}")
+        # always get yesterday's solar data, as today's data may not be complete
+        day_start = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    elif isinstance(target_timestamp, datetime):
+        target_dt = target_timestamp if target_timestamp.tzinfo else target_timestamp.replace(tzinfo=tz)
+        day_start = target_dt.astimezone(tz).replace(hour=0, minute=0, second=0, microsecond=0)
+    else:
+        day_start = datetime.fromtimestamp(int(target_timestamp), tz=tz).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
 
-        # unix timestamp: always get yesterday's solar data, as today's data may not be complete
-        start_timestamp = int(yesterday.timestamp())
-        end_timestamp = int(today.timestamp()) - 1 # to exclude 00:00 data point of the next day
+    day_end = day_start + timedelta(days=1)
+    start_timestamp = int(day_start.timestamp())
+    end_timestamp = int(day_end.timestamp()) - 1  # exclude 00:00 of the next day
+    logger.info(f"date window: {day_start} -> {day_end}")
 
     try:
         # unix timestamp format
