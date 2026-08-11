@@ -1,27 +1,27 @@
-# luminos
+# Luminos
 
-**luminos** is an automated data platform that ingests solar energy metrics and weather data, transforms them into analytics-ready datasets, and enables monitoring and forecasting of generated solar energy performance.
+**Luminos** is an automated data platform that ingests solar energy metrics and weather data, transforms them into analytics-ready datasets, and supports monitoring and forecasting of solar energy performance.
 
-if you are interested in working with residential solar energy generation data, i have made my dataset public. you can access it here:
+If you're interested in residential solar energy generation data, I've made my dataset public. You can access it here:
 
-[solar energy generation and weather data](https://www.kaggle.com/datasets/christiancanillas/solar-energy-generation-and-weather-data)
+[Solar Energy Generation and Weather Data](https://www.kaggle.com/datasets/christiancanillas/solar-energy-generation-and-weather-data)
 
-## architecture
+## Architecture
 
-![luminos system architecture](assets/images/system-architecture.jpg)
+![Luminos system architecture](assets/images/system-architecture.jpg)
 
-## data lineage
+## Data Lineage
 
-![luminos data lineage](assets/images/data-lineage.jpg)
+![Luminos data lineage](assets/images/data-lineage.jpg)
 
-## features
+## Features
 
-- **automated daily ingestion**: scheduled data collection at 2 am gmt+8
-- **historical backfilling**: flexible date-range backfill capability
-- **data quality tests**: automated validation via dbt tests
-- **multi-grain analysis**: 5-minute raw → hourly → daily → monthly aggregations
+- **Automated daily ingestion**: Scheduled data collection at 2 AM GMT+8
+- **Historical backfilling**: Flexible date-range backfill
+- **Data quality tests**: Automated validation via dbt tests
+- **Multi-grain analysis**: 5-minute raw → hourly → daily → monthly aggregations
 
-## project structure
+## Project Structure
 ```
 luminos/
 ├── .env.example                # Template for environment variables
@@ -71,65 +71,65 @@ luminos/
 ```
 
 
-## if you want to setup locally
+## Local Setup
 
-### prerequisities
-- docker & docker compose installed
-- python 3.10+
-- motherduck account
-- deye cloud api credentials
+### Prerequisites
+- Docker and Docker Compose installed
+- Python 3.10+
+- MotherDuck account
+- Deye Cloud API credentials
 
-### setup
-1. create environment file
+### Setup
+1. Create the environment file
 ```
 cp .env.example .env
-# edit .env using your credentials
+# Edit .env with your credentials
 ```
 
-2. start airflow
+2. Start Airflow
 ```
 docker-compose up airflow-init
 docker-compose up -d
 ```
 
-3. access airflow ui
+3. Open the Airflow UI
 ```
-url: http://localhost:8080
-username: (from _AIRFLOW_WWW_USER_USERNAME in .env)
-password: (from _AIRFLOW_WWW_USER_PASSWORD in .env)
+URL: http://localhost:8080
+Username: (from _AIRFLOW_WWW_USER_USERNAME in .env)
+Password: (from _AIRFLOW_WWW_USER_PASSWORD in .env)
 ```
 
-### local development
-#### local dbt development
-since `profiles.yml` defaults to `prod` (MotherDuck), use --target dev for local development:
+### Local Development
+#### Local dbt Development
+`profiles.yml` defaults to `prod` (MotherDuck), so use `--target dev` for local work:
 
 ```
-# run models locally
+# Run models locally
 uv run dbt run --project-dir transform --target dev
 
-# run tests
+# Run tests
 uv run dbt test --project-dir transform --target dev
 
-# generate documentation
+# Generate documentation
 uv run dbt docs generate --project-dir transform --target dev
 uv run dbt docs serve --project-dir transform --target dev
 ```
 
-#### running jobs locally (without airflow):
+#### Running Jobs Locally (Without Airflow)
 ```
-# install uv first
+# Install uv first
 pip install uv
 
-# sync all dependencies
+# Sync all dependencies
 uv sync
 
-# solar job
+# Solar job
 uv run python -m ingest.jobs.daily_solar_job
 
-# weather job
+# Weather job
 uv run python -m ingest.jobs.daily_weather_job
 
-# backfills
+# Backfills
 uv run python -m ingest.jobs.backfill_solar_job --start-date YYYY-MM-DD --end-date YYYY-MM-DD
 uv run python -m ingest.jobs.backfill_weather_job --start-date YYYY-MM-DD --end-date YYYY-MM-DD
 ```
