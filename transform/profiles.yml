@@ -1,0 +1,13 @@
+transform:
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DEV_DUCKDB_PATH', 'luminos.duckdb') }}"
+      threads: 4
+
+    prod:
+      type: duckdb
+      path: "{{ env_var('PROD_DUCKDB_PATH') }}"
+      threads: 4
+
+  target: prod

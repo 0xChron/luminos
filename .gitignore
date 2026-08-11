@@ -23,8 +23,10 @@ main.py
 logs/
 
 # dbt 
-profiles.yml
 .user.yml
+
+# Data
+luminos.duckdb
 
 .DS_Store
 

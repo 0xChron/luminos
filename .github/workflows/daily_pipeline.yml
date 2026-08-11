@@ -1,0 +1,85 @@
+name: daily ELT pipeline
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # 2am gmt+8
+  workflow_dispatch: 
+
+jobs:
+  ingest-solar:
+    name: Ingest Solar Data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run solar ingestion job
+        env:
+          EMAIL: ${{ secrets.EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+          DEVICE_SN: ${{ secrets.DEVICE_SN }}
+          STATION_ID: ${{ secrets.STATION_ID }}
+          PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+        run: uv run python -m ingest.jobs.daily_solar_job
+
+  ingest-weather:
+    name: Ingest Weather Data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run weather ingestion job
+        env:
+          LATITUDE: ${{ secrets.LATITUDE }}
+          LONGITUDE: ${{ secrets.LONGITUDE }}
+          PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+        run: uv run python -m ingest.jobs.daily_weather_job
+
+  dbt-transformations:
+    name: dbt Transformations
+    runs-on: ubuntu-latest
+    needs: [ingest-solar, ingest-weather]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dbt dependencies
+        run: uv sync
+
+      - name: Install dbt packages
+        env:
+          PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+        run: |
+          uv run dbt deps --project-dir transform --profiles-dir transform
+          
+      - name: Run dbt build
+        env:
+          PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+        run: |
+          uv run dbt build --project-dir transform --profiles-dir transform --target prod
+
+   
