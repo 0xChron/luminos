@@ -23,6 +23,7 @@ jobs:
 
       - name: Run solar ingestion job
         env:
+          ENV: prod
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
           APP_ID: ${{ secrets.APP_ID }}
@@ -30,6 +31,7 @@ jobs:
           DEVICE_SN: ${{ secrets.DEVICE_SN }}
           STATION_ID: ${{ secrets.STATION_ID }}
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: uv run python -m ingest.jobs.daily_solar_job
 
   ingest-weather:
@@ -49,9 +51,11 @@ jobs:
 
       - name: Run weather ingestion job
         env:
+          ENV: prod
           LATITUDE: ${{ secrets.LATITUDE }}
           LONGITUDE: ${{ secrets.LONGITUDE }}
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: uv run python -m ingest.jobs.daily_weather_job
 
   dbt-transformations:
@@ -73,12 +77,14 @@ jobs:
       - name: Install dbt packages
         env:
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: |
           uv run dbt deps --project-dir transform --profiles-dir transform
           
       - name: Run dbt build
         env:
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: |
           uv run dbt build --project-dir transform --profiles-dir transform --target prod
 

@@ -62,6 +62,7 @@ jobs:
 
       - name: Run solar backfill job
         env:
+          ENV: prod
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
           APP_ID: ${{ secrets.APP_ID }}
@@ -69,6 +70,7 @@ jobs:
           DEVICE_SN: ${{ secrets.DEVICE_SN }}
           STATION_ID: ${{ secrets.STATION_ID }}
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: uv run python -m ingest.jobs.backfill_solar_job --start-date ${{ inputs.start_date }} --end-date ${{ inputs.end_date }}
 
   backfill-weather:
@@ -89,9 +91,11 @@ jobs:
 
       - name: Run weather backfill job
         env:
+          ENV: prod
           LATITUDE: ${{ secrets.LATITUDE }}
           LONGITUDE: ${{ secrets.LONGITUDE }}
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: uv run python -m ingest.jobs.backfill_weather_job --start-date ${{ inputs.start_date }} --end-date ${{ inputs.end_date }}
 
   dbt-transformations:
@@ -113,12 +117,14 @@ jobs:
       - name: Install dbt packages
         env:
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: |
           uv run dbt deps --project-dir transform --profiles-dir transform
 
       - name: Run dbt build
         env:
           PROD_DUCKDB_PATH: ${{ secrets.PROD_DUCKDB_PATH }}
+          MOTHERDUCK_TOKEN: ${{ secrets.MOTHERDUCK_TOKEN }}
         run: |
           uv run dbt build --project-dir transform --profiles-dir transform --target prod
 

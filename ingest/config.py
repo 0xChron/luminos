@@ -42,6 +42,9 @@ class Config:
         ]
 
 
-    DEV_DUCKDB_PATH = os.getenv('DUCKDB_PATH')
+    # Local: ENV=dev (default) → DEV_DUCKDB_PATH
+    # GitHub Actions: ENV=prod → PROD_DUCKDB_PATH
+    ENV = os.getenv('ENV', 'dev').lower()
+    DEV_DUCKDB_PATH = os.getenv('DEV_DUCKDB_PATH')
     PROD_DUCKDB_PATH = os.getenv('PROD_DUCKDB_PATH')
-    DUCKDB_PATH = PROD_DUCKDB_PATH
+    DUCKDB_PATH = PROD_DUCKDB_PATH if ENV == 'prod' else DEV_DUCKDB_PATH

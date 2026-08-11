@@ -13,12 +13,6 @@ wheels/
 # Secrets
 .env
 
-# Notes
-NOTES.md
-SCHEMA.md
-main.ipynb
-main.py
-
 # Development logs
 logs/
 
@@ -28,6 +22,9 @@ logs/
 # Data
 luminos.duckdb
 
-.DS_Store
+# Cursor
+.cursor/
 
+# Other files
+.DS_Store
 prepare-deployment.sh
