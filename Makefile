@@ -14,22 +14,22 @@ backfill-weather:
 		--end-date $(END_DATE)
 
 dbt-run:
-	uv run dbt run --project-dir transform --target dev
+	uv run dbt run --project-dir transform --profiles-dir transform --target dev
 
 dbt-test:
-	uv run dbt test --project-dir transform --target dev
+	uv run dbt test --project-dir transform --profiles-dir transform --target dev
 
 dbt-build:
-	uv run dbt build --project-dir transform --target dev
+	uv run dbt build --project-dir transform --profiles-dir transform --target dev
 
 dbt-docs:
-	uv run dbt docs serve --project-dir transform --target dev
+	uv run dbt docs serve --project-dir transform --profiles-dir transform --target dev
 
 # Local pre-PR gate: deps + dbt run/test on --target dev (does not ingest)
 verify:
 	uv sync
-	uv run dbt deps --project-dir transform
-	uv run dbt build --project-dir transform --target dev
+	uv run dbt deps --project-dir transform --profiles-dir transform
+	uv run dbt build --project-dir transform --profiles-dir transform --target dev
 
 view:
 	duckdb luminos.duckdb -ui
